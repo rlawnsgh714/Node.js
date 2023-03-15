@@ -1,24 +1,11 @@
 const Sequelize = require("sequelize");
 
-class User extends Sequelize.Model {
+class Comment extends Sequelize.Model {
   static initiate(sequelize) {
-    User.init(
+    Comment.init(
       {
-        name: {
-          type: Sequelize.STRING(20),
-          allowNull: false,
-          unique: true,
-        },
-        age: {
-          type: Sequelize.INTEGER.UNSIGNED,
-          allowNull: false,
-        },
-        married: {
-          type: Sequelize.BOOLEAN,
-          allowNull: false,
-        },
         comment: {
-          type: Sequelize.TEXT,
+          type: Sequelize.STRING(100),
           allowNull: true,
         },
         created_at: {
@@ -31,8 +18,8 @@ class User extends Sequelize.Model {
         sequelize,
         timestamps: false, //true라면 updated_at, created_at 생성
         underscored: false, //카멜 케이스 유뮤
-        modelName: "User", //모델 이름
-        tableName: "users", //테이블 이름
+        modelName: "Comment", //모델 이름
+        tableName: "comments", //테이블 이름
         paranoid: false, //삭제 or 삭제 된 시간으로 표시
         charset: "utf8mb4",
         collate: "utf8mb4_general_ci",
@@ -40,8 +27,8 @@ class User extends Sequelize.Model {
     );
   }
   static associate(db) {
-    db.User.hasMany(db.Comment, { foriegnKey: "commenter", targetKey: "id" });
+    db.Comment.belongsTo(db.User, { foreignKey: "commenter", targetKey: "id" });
   }
 }
 
-module.exports = User;
+module.exports = Comment;
