@@ -4,11 +4,13 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ex</title>
+    <title>Add todo</title>
   </head>
   <body>
-    {% for i in list %}
-    <a href="/{{i.id}}"><p>{{i.job}}</p></a>
-    {% endfor %}
+    <form action="/add" method="post">
+      <label for="job">할 일</label>
+      <input type="text" id="job" name="job" />
+      <input type="submit" value="저장하기" />
+    </form>
   </body>
 </html>
