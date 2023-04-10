@@ -11,12 +11,13 @@ dotenv.config();
 const pageRouter = require("./routes/page");
 const authRouter = require("./routes/auth");
 const postRouter = require("./routes/post");
+const userRouter = require("./routes/user");
 const { sequelize } = require("./models");
 const passportConfig = require("./passport");
 
 const app = express();
 passportConfig();
-app.set("port", process.env.PORT || 8001);
+app.set("port", process.env.PORT || 3001);
 app.set("view engine", "html");
 nunjucks.configure("views", {
   express: app,
@@ -54,6 +55,7 @@ app.use(passport.session());
 app.use("/", pageRouter);
 app.use("/auth", authRouter);
 app.use("/post", postRouter);
+app.use("/user", userRouter);
 
 app.use((req, res, next) => {
   const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
@@ -71,3 +73,10 @@ app.use((err, req, res, next) => {
 app.listen(app.get("port"), () => {
   console.log(app.get("port"), "번 포트에서 대기중");
 });
+
+//TODO
+//언팔하기 기능
+//글 삭제 -paranoid, Posthashtag mapping table 수정
+//글 수정 (본문만)
+//회원 정보 수정(닉네임, 비밀번호)
+//홈으로 가기 링크

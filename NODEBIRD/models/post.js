@@ -12,6 +12,10 @@ class Post extends Sequelize.Model {
           type: Sequelize.STRING(200),
           allowNull: true,
         },
+        deletedAt: {
+          type: Sequelize.BOOLEAN,
+          allowNull: true,
+        },
       },
       {
         sequelize,
@@ -19,6 +23,7 @@ class Post extends Sequelize.Model {
         underscored: false,
         modelName: "Post",
         tableName: "posts",
+        paranoid: true,
         paranoid: false,
         charset: "utf8mb4",
         collate: "utf8mb4_general_ci",
