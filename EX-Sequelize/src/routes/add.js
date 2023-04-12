@@ -10,7 +10,6 @@ router
   })
   .post(async (req, res, next) => {
     const job = req.body.job;
-    console.log(req);
     try {
       Todo.create({
         job: job,

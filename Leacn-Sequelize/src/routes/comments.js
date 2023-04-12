@@ -9,7 +9,6 @@ router.post("/", async (req, res, next) => {
       commenter: req.body.id,
       coment: req.body.comment,
     });
-    console.log(comment);
   } catch (err) {
     console.log(err);
     next(err);

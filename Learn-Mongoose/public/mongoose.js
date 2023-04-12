@@ -4,12 +4,11 @@ document.querySelectorAll("#user-list tr").forEach((el) => {
     getComment(id);
   });
 });
-// 사용자 로딩
+
 async function getUser() {
   try {
     const res = await axios.get("/users");
     const users = res.data;
-    console.log(users);
     const tbody = document.querySelector("#user-list tbody");
     tbody.innerHTML = "";
     users.map(function (user) {
@@ -17,7 +16,7 @@ async function getUser() {
       row.addEventListener("click", () => {
         getComment(user._id);
       });
-      // 로우 셀 추가
+
       let td = document.createElement("td");
       td.textContent = user._id;
       row.appendChild(td);
@@ -36,7 +35,7 @@ async function getUser() {
     console.error(err);
   }
 }
-// 댓글 로딩
+
 async function getComment(id) {
   try {
     const res = await axios.get(`/users/${id}/comments`);
@@ -44,7 +43,6 @@ async function getComment(id) {
     const tbody = document.querySelector("#comment-list tbody");
     tbody.innerHTML = "";
     comments.map(function (comment) {
-      // 로우 셀 추가
       const row = document.createElement("tr");
       let td = document.createElement("td");
       td.textContent = comment._id;
@@ -58,7 +56,6 @@ async function getComment(id) {
       const edit = document.createElement("button");
       edit.textContent = "수정";
       edit.addEventListener("click", async () => {
-        // 수정 클릭 시
         const newComment = prompt("바꿀 내용을 입력하세요");
         if (!newComment) {
           return alert("내용을 반드시 입력하셔야 합니다");
@@ -75,7 +72,6 @@ async function getComment(id) {
       const remove = document.createElement("button");
       remove.textContent = "삭제";
       remove.addEventListener("click", async () => {
-        // 삭제 클릭 시
         try {
           await axios.delete(`/comments/${comment._id}`);
           getComment(id);
@@ -83,7 +79,7 @@ async function getComment(id) {
           console.error(err);
         }
       });
-      // 버튼 추가
+
       td = document.createElement("td");
       td.appendChild(edit);
       row.appendChild(td);
@@ -96,7 +92,7 @@ async function getComment(id) {
     console.error(err);
   }
 }
-// 사용자 등록 시
+
 document.getElementById("user-form").addEventListener("submit", async (e) => {
   e.preventDefault();
   const name = e.target.username.value;
@@ -118,7 +114,7 @@ document.getElementById("user-form").addEventListener("submit", async (e) => {
   e.target.age.value = "";
   e.target.married.checked = false;
 });
-// 댓글 등록 시
+
 document
   .getElementById("comment-form")
   .addEventListener("submit", async (e) => {

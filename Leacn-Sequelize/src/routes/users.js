@@ -22,7 +22,6 @@ router
         age: req.body.age,
         married: req.body.married,
       });
-      console.log(user);
       res.status(201).json(user);
     } catch (err) {
       console.log(err);
@@ -38,7 +37,6 @@ router.get(":id/comments", async (req, res, next) => {
         where: { id: req.params.id },
       },
     });
-    console.log(comments);
     res.json(comments);
   } catch (err) {
     console.log(err);

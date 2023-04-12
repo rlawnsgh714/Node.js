@@ -5,7 +5,6 @@ const Todo = require("../models/todo");
 router.get("/", async (req, res, next) => {
   try {
     const list = await Todo.findAll();
-    console.log(list);
     res.render("index", { list: list });
   } catch (err) {
     next(err);
@@ -20,7 +19,7 @@ router.get("/:id", async (req, res, next) => {
         id: id,
       },
     });
-    res.render('todo', {todo:todo});
+    res.render("todo", { todo: todo });
   } catch (err) {
     next(err);
   }
