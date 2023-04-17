@@ -24,7 +24,7 @@ exports.createToken = async (req, res) => {
       },
       process.env.JWT_SECRET,
       {
-        expiresIn: "1m", // 1분
+        expiresIn: "30m", // 30분
         issuer: "nodebird",
       }
     );
@@ -46,21 +46,22 @@ exports.tokenTest = (req, res) => {
   res.json(res.locals.decoded);
 };
 
-exports.getMyPosts = async (req, res) => {
-  try {
-    const posts = await Post.findAll({
-      where: { userId: res.locals.decoded.id },
+exports.getMyPosts = (req, res) => {
+  Post.findAll({ where: { userId: res.locals.decoded.id } })
+    .then((posts) => {
+      console.log(posts);
+      res.json({
+        code: 200,
+        payload: posts,
+      });
+    })
+    .catch((error) => {
+      console.error(error);
+      return res.status(500).json({
+        code: 500,
+        message: "서버 에러",
+      });
     });
-    res.json({
-      code: 200,
-      posts,
-    });
-  } catch (error) {
-    return res.status(500).json({
-      code: 500,
-      message: "서버 에러",
-    });
-  }
 };
 
 exports.getPostsByHashtag = async (req, res) => {
