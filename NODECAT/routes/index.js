@@ -1,9 +1,10 @@
 const express = require("express");
-const { test } = require("../controller");
+const { getMyPosts, searchByHashtag } = require("../controller");
 
 const router = express.Router();
 
-// POST /test
-router.get("/test", test);
+router.get("/myposts", getMyPosts);
+
+router.get("/search/:hashtag", searchByHashtag);
 
 module.exports = router;
