@@ -60,6 +60,7 @@ app.use("/auth", authRouter);
 app.use((req, res, next) => {
   const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
   error.status = 404;
+  console.log("라우터 없음");
   next(error);
 });
 

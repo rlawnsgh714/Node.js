@@ -4,18 +4,11 @@
     <title>프론트 API 요청</title>
   </head>
   <body>
-    <div>
-      <h3>
-        <a href="/">전체 글 </a>
-      </h3>
-      <h3>
-        <a href="/myposts">내 글</a>
-      </h3>
-    </div>
     <div id="result"></div>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <div class="timeline">
       <div class="twits">
-        <form id="hashtag-form" action="/search">
+        <form id="hashtag-form" action="/hashtag">
           <input type="text" name="hashtag" placeholder="태그 검색" />
           <button class="btn">검색</button>
         </form>
@@ -25,18 +18,26 @@
           <input type="hidden" value="{{twit.id}}" class="twit-id" />
           <div class="twit-author">{{twit.User.nick}}</div>
           <div class="twit-content">{{twit.content}}</div>
-          <form action="/update" method="post">
-            <input type="text" name="content" />
-            <button class="btn">수정</button>
-          </form>
-          <form action="/delete/{{twit.id}}" method="post">
-            <button class="btn">삭제</button>
-          </form>
+          {% if twit.img %}
+          <div class="twit-img"><img src="{{twit.img}}" alt="섬네일" /></div>
+          {% endif %}
         </div>
         {% endfor %}
       </div>
     </div>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script></script>
+    <script>
+      axios
+        .post("http://localhost:3002/v2/token", {
+          clientSecret: "{{key}}",
+        })
+        .then((res) => {
+          document.querySelector("#result").textContent = JSON.stringify(
+            res.data
+          );
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    </script>
   </body>
 </html>

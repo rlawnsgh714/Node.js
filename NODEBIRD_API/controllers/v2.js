@@ -46,10 +46,31 @@ exports.tokenTest = (req, res) => {
   res.json(res.locals.decoded);
 };
 
-exports.getMyPosts = (req, res) => {
-  Post.findAll({ where: { userId: res.locals.decoded.id } })
+exports.getPosts = (req, res) => {
+  Post.findAll({
+    include: { model: User, attribute: ["nick", "id"] },
+  })
     .then((posts) => {
-      console.log(posts);
+      res.json({
+        code: 200,
+        payload: posts,
+      });
+    })
+    .catch((error) => {
+      console.error(error);
+      return res.status(500).json({
+        code: 500,
+        message: "서버 에러",
+      });
+    });
+};
+
+exports.getMyPosts = (req, res) => {
+  Post.findAll({
+    where: { userId: res.locals.decoded.id },
+    include: { model: User, attribute: ["nick", "id"] },
+  })
+    .then((posts) => {
       res.json({
         code: 200,
         payload: posts,
@@ -66,17 +87,12 @@ exports.getMyPosts = (req, res) => {
 
 exports.getPostsByHashtag = async (req, res) => {
   try {
-    const hashtag = await Hashtag.findOne({
-      where: { title: req.params.title },
+    const posts = await Post.findAll({
+      where: { content: req.query.hashtag },
+      include: { model: User, attribute: ["nick", "id"] },
     });
-    if (!hashtag) {
-      return res.status(404).json({
-        code: 404,
-        message: "검색 결과가 없습니다",
-      });
-    }
-    const posts = await hashtag.getPosts();
     return res.json({
+      include: { model: User, attribute: ["nick", "id"] },
       code: 200,
       payload: posts,
     });
@@ -86,5 +102,40 @@ exports.getPostsByHashtag = async (req, res) => {
       code: 500,
       message: "서버 에러",
     });
+  }
+};
+
+exports.updatePost = async (req, res, next) => {
+  try {
+    Post.update(
+      {
+        content: req.body.content,
+      },
+      { where: { id: req.params.id } }
+    ).then((result) => {
+      return res.render("main", { twits: result });
+    });
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};
+
+exports.deletePost = async (req, res, next) => {
+  try {
+    console.log(req.params);
+    console.log(req.parms.id);
+    const post = await Post.findOne({ where: { id: req.params } });
+    const user = await User.findOne({ where: { id: req.user.id } });
+    if (user) {
+      await post.destroy();
+      return res.status(200).json({
+        code: 200,
+        message: "삭제 성공",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    next(error);
   }
 };
