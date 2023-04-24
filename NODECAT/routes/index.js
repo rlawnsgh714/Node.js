@@ -4,7 +4,6 @@ const {
   getMyPosts,
   searchByHashtag,
   deletePost,
-  renderMain,
 } = require("../controller");
 
 const router = express.Router();

@@ -27,7 +27,6 @@ const request = async (req, api) => {
 
 exports.getPosts = async (req, res, next) => {
   try {
-    console.log("getPosts");
     const result = await request(req, "/posts");
     res.render("main", { twits: result.data.payload });
   } catch (error) {
@@ -49,9 +48,9 @@ exports.getMyPosts = async (req, res, next) => {
 exports.searchByHashtag = async (req, res, next) => {
   try {
     const result = await request(
-      `/posts/hashtag?hashtag=${encodeURIComponent(req.query.hashtag)}`
+      req,
+      `/posts/hashtag/${encodeURIComponent(req.query.hashtag)}`
     );
-    console.log(result.data);
     res.render("main", { twits: result.data.payload });
   } catch (error) {
     if (error.code) {

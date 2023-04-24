@@ -25,7 +25,7 @@ exports.createToken = async (req, res) => {
       process.env.JWT_SECRET,
       {
         expiresIn: "30m", // 30분
-        issuer: "nodebird",
+        issuer: "cloth",
       }
     );
     return res.json({
@@ -87,12 +87,17 @@ exports.getMyPosts = (req, res) => {
 
 exports.getPostsByHashtag = async (req, res) => {
   try {
-    const posts = await Post.findAll({
-      where: { content: req.query.hashtag },
-      include: { model: User, attribute: ["nick", "id"] },
+    const hashtag = await Hashtag.findOne({
+      where: { title: req.params.title },
     });
+    if (!hashtag) {
+      return res.status(404).json({
+        code: 404,
+        message: "검색 결과가 없습니다",
+      });
+    }
+    const posts = await hashtag.getPosts();
     return res.json({
-      include: { model: User, attribute: ["nick", "id"] },
       code: 200,
       payload: posts,
     });
@@ -123,8 +128,6 @@ exports.updatePost = async (req, res, next) => {
 
 exports.deletePost = async (req, res, next) => {
   try {
-    console.log(req.params);
-    console.log(req.parms.id);
     const post = await Post.findOne({ where: { id: req.params } });
     const user = await User.findOne({ where: { id: req.user.id } });
     if (user) {

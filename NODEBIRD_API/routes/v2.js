@@ -29,7 +29,7 @@ router.get("/posts", verifyToken, getPosts);
 
 router.get("/posts/my", verifyToken, getMyPosts);
 
-router.get("/posts/hashtag", verifyToken, getPostsByHashtag);
+router.get("/posts/hashtag/:title", apiLimiter, verifyToken, getPostsByHashtag);
 
 router.get("/posts/update/:id", verifyToken, updatePost);
 
